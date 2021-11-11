@@ -94,7 +94,7 @@ app.post('/addCourse', async(req, res)=>{
         }
     
     await Course(courses).save().then(c =>{
-        return res.status(201).json('courses added');
+        return res.status(201).json('course added');
     });
     }catch{
         return res.status(500).json('{message: could not add course}');
@@ -118,6 +118,96 @@ app.post('/addStudent', async(req, res)=>{
     }catch{
         return res.status(500).json('{message: could not add student}');
     }
+});
+
+//updates the first name of student using the generic id provided by the database
+app.post('/editStudentById', async(req,res)=>{
+    try{
+        let students = await Student.find({id:req.body.id});
+           if(students){
+               await Student.updateOne({id: req.body.id},{fname: req.body.fname});
+               return res.status(500).json('{message: updated student}');
+           }else{
+               return res.status(500).json('{message: could not update student}'); 
+           }
+        
+    }catch{
+        res.status(500).json('{message: Could not find courses}');
+    }
+    
+    
+});
+
+//updates the first name and last name of student by using the first name that's currently on the database
+app.post('/editStudentByFname', async(req,res)=>{
+    try{
+        let students = await Student.find({fname:req.body.fname});
+           if(students){
+               await Student.updateOne({fname:req.body.fname}, {fname: req.body.Fname, lname: req.body.lname});
+               return res.status(500).json('{message: updated student by first name}');
+           }else{
+               return res.status(500).json('{message: could not update student by first name}'); 
+           }
+        
+    }catch{
+        res.status(500).json('{message: Could not find student}');
+    }
+    
+    
+});
+
+//updates the course Instructor's name using the course name
+app.post('/editCourseByCourseName', async(req,res)=>{
+    try{
+        let courses = await Course.find({courseName:req.body.courseName});
+           if(courses){
+               await Course.updateOne({courseName:req.body.courseName}, {courseInstructor: req.body.courseInstructor});  
+               return res.status(500).json('{message: updated course instructor}');
+           }else{
+               return res.status(500).json('{message: could not update course instructor}'); 
+           }
+        
+    }catch{
+        res.status(500).json('{message: Could not find courses}');
+    }
+    
+    
+});
+
+//deletes a course from the courses using the generic id provided in the body
+app.post('/deleteCourseById', async(req,res)=>{
+    try{
+        let courses = await Course.find({id:req.body.id});
+        if(courses){
+            await Course.deleteOne({id: req.body.id});
+            return res.status(500).json('{message: delete course}');
+        }else{
+            return res.status(500).json('{message: could not delete course}'); 
+        }
+        
+    }catch{
+        res.status(500).json('{message: Could not find course}');
+    }
+    
+    
+});
+
+//deletes student from all classes using the studentID provided in the body
+app.post('/removeStudentFromClasses', async(req,res)=>{
+    try{
+        let students = await Student.find({studentID:req.body.studentID});
+        if(students){
+            await Student.deleteMany({studentID: req.body.studentID});
+            return res.status(500).json('{message: deleted student from all classes}');
+        }else{
+            return res.status(500).json('{message: could not delete student from all classes}'); 
+        }
+        
+    }catch{
+        res.status(500).json('{message: Could not find student}');
+    }
+    
+    
 });
 
 app.listen(PORT, () => {
