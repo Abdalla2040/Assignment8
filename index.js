@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 
 const PORT = 1200;
 
-const dbUrl = "mongodb+srv://admin:Passw0rd@cluster0.vpu9l.mongodb.net/G2A4?retryWrites=true&w=majority";
+const dbUrl = "mongodb+srv://admin:supers450@cluster0.8jehk.mongodb.net/mohamedDB?retryWrites=true&w=majority";
 
 //Connect to MongoDB
 mongoose.connect(dbUrl,{
@@ -123,16 +123,16 @@ app.post('/addStudent', async(req, res)=>{
 //updates the first name of student using the generic id provided by the database
 app.post('/editStudentById', async(req,res)=>{
     try{
-        let students = await Student.find({id:req.body.id});
+        let students = await Student.find({_id:req.body.id});
            if(students){
-               await Student.updateOne({id: req.body.id},{fname: req.body.fname});
+               await Student.updateOne({_id: req.body.id},{fname: req.body.fname});
                return res.status(500).json('{message: updated student}');
            }else{
                return res.status(500).json('{message: could not update student}'); 
            }
         
     }catch{
-        res.status(500).json('{message: Could not find courses}');
+        res.status(500).json('{message: Could not find student}');
     }
     
     
@@ -177,9 +177,9 @@ app.post('/editCourseByCourseName', async(req,res)=>{
 //deletes a course from the courses using the generic id provided in the body
 app.post('/deleteCourseById', async(req,res)=>{
     try{
-        let courses = await Course.find({id:req.body.id});
+        let courses = await Course.find({_id:req.body.id});
         if(courses){
-            await Course.deleteOne({id: req.body.id});
+            await Course.deleteOne({_id: req.body.id});
             return res.status(500).json('{message: delete course}');
         }else{
             return res.status(500).json('{message: could not delete course}'); 
