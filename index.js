@@ -37,7 +37,7 @@ const Course = mongoose.model('Course');
 app.get('/getAllStudents', async(req,res)=>{
     try{
         let students = await Student.find({}).lean();
-        return res.status(200).json(students);
+        return res.status(200).json({"students":students});
     }catch{
         res.status(500).json('{message: Could not find students}');
     }
@@ -49,7 +49,7 @@ app.get('/getAllStudents', async(req,res)=>{
 app.get('/getAllCourses', async(req,res)=>{
     try{
         let courses = await Course.find({}).lean();
-        return res.status(200).json(courses);
+        return res.status(200).json({'courses':courses});
     }catch{
         res.status(500).json('{message: Could not find courses}');
     }
@@ -143,7 +143,7 @@ app.post('/editStudentByFname', async(req,res)=>{
     try{
         let students = await Student.find({fname:req.body.fname});
            if(students){
-               await Student.updateOne({fname:req.body.fname}, {fname: req.body.Fname, lname: req.body.lname});
+               await Student.updateOne({firstName:req.body.fname}, {fname: req.body.Fname, lname: req.body.lname});
                return res.status(500).json('{message: updated student by first name}');
            }else{
                return res.status(500).json('{message: could not update student by first name}'); 
@@ -177,7 +177,7 @@ app.post('/editCourseByCourseName', async(req,res)=>{
 //deletes a course from the courses using the generic id provided in the body
 app.post('/deleteCourseById', async(req,res)=>{
     try{
-        let courses = await Course.find({_id:req.body.id});
+        let courses = await Course.find({_id: req.body.id});
         if(courses){
             await Course.deleteOne({_id: req.body.id});
             return res.status(500).json('{message: delete course}');
